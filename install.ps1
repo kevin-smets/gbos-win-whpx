@@ -78,18 +78,8 @@ if (-not (Test-Path $qemuBin)) {
         $qemuBin = "$PSScriptRoot\..\gbos-win-vm\qemu\qemu-system-x86_64.exe"
         Write-Host "   Found development sibling QEMU: $qemuBin" -ForegroundColor Green
     } else {
-        Write-Host "   QEMU not found in PATH or project directory." -ForegroundColor Yellow
-        $winget = Get-Command "winget" -ErrorAction SilentlyContinue
-        if ($winget) {
-            Write-Host "   Installing QEMU via Windows Package Manager (winget)..." -ForegroundColor Cyan
-            & winget install -e --id SoftwareFreedomConservancy.QEMU --accept-source-agreements --accept-package-agreements
-            if (Test-Path "C:\Program Files\qemu\qemu-system-x86_64.exe") {
-                $qemuBin = "C:\Program Files\qemu\qemu-system-x86_64.exe"
-                Write-Host "   QEMU installed successfully!" -ForegroundColor Green
-            }
-        } else {
-            Write-Warning "winget not found. Please install QEMU from https://qemu.weilnetz.de/w64/ or place QEMU binaries in $PSScriptRoot\qemu"
-        }
+        Write-Error "QEMU not found. Install it first (see README, 'Get started'), e.g. from https://qemu.weilnetz.de/w64/ or place the binaries in $PSScriptRoot\qemu"
+        exit 1
     }
 } else {
     Write-Host "   Found QEMU: $qemuBin" -ForegroundColor Green

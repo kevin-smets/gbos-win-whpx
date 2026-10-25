@@ -44,6 +44,7 @@ Previous community efforts (such as `gbrunch` and `gbos-vm`) were either restric
 * **Memory:** 8 GB RAM minimum (16 GB recommended). The launcher automatically allocates **50% of your system RAM and CPU cores** by default.
 * **Storage:** 20 GB free disk space.
 * **Python:** Python 3.10 or newer (ensure `Add Python to PATH` was checked during installation).
+* **QEMU:** `qemu-system-x86_64.exe` and `qemu-img.exe` with WHPX support, installed by you (the installer does not install it).
 
 ---
 
@@ -56,19 +57,22 @@ dism /online /enable-feature /featurename:HypervisorPlatform /all /norestart
 ```
 *(If prompted, restart your computer).*
 
-### Step 2: Clone the Repository & Run Installer
+### Step 2: Install QEMU
+QEMU is the emulator that runs the virtual machine. Install it yourself before running the installer, from the official Windows builds at https://qemu.weilnetz.de/w64/ (or `winget install SoftwareFreedomConservancy.QEMU`), or place the binaries in a `qemu\` folder inside the repository. The installer only looks for it and stops with an error if it is missing.
+
+### Step 3: Clone the Repository & Run Installer
 ```powershell
 git clone https://github.com/ArtemPozharov/gbos-win-whpx.git
 cd gbos-win-whpx
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 The automated script will:
-1. Verify system virtualization requirements.
+1. Verify system virtualization requirements and that QEMU is installed.
 2. Download the official Lenovo Ruby recovery image from `dl.google.com` (pass `-RecoverySha256 <hash>` to verify it; otherwise the hash is printed).
 3. Build the AVX-VNNI emulator from source (or use the prebuilt one with `-TrustPrebuiltModule`) and apply the color fix patch (requires a matching `vm.json`).
 4. Stop with an error if disk assembly is not available (currently the case).
 
-### Step 3: Launch Googlebook OS!
+### Step 4: Launch Googlebook OS!
 Double-click `Start-Googlebook.bat` or run:
 ```powershell
 .\Start-Googlebook.bat
